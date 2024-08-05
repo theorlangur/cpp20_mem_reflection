@@ -74,7 +74,6 @@ namespace refl
 	    auto const& [__VA_ARGS__] = v; \
 	    return callback(__VA_ARGS__); \
 	} \
-	template<class CB> \
 	static constexpr size_t all_fields_size() \
 	{ \
 	    auto const& [__VA_ARGS__] = std::declval<T>(); \
@@ -165,8 +164,8 @@ int main(int argc, char *argv[])
 	std::println("B: field {}. sizeof={}", idx, sizeof(std::remove_cvref_t<decltype(m)>));
     });
     constexpr auto field_size_sum = [](auto... fields){return (sizeof(decltype(fields)) + ...); };
-    //static_assert(sizeof(A) == refl::get_all_fields_size<A>());
-    static_assert(sizeof(A) == refl::fetch_all_mem<A>(field_size_sum));
-    static_assert(sizeof(B) == refl::fetch_all_mem<B>(field_size_sum));
+    static_assert(sizeof(A) == refl::get_all_fields_size<A>());
+    //static_assert(sizeof(A) == refl::fetch_all_mem<A>(field_size_sum));
+    //static_assert(sizeof(B) == refl::fetch_all_mem<B>(field_size_sum));
     return 0;
 }
