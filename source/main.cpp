@@ -33,6 +33,7 @@ namespace refl
 	template<size_t n = 0>
 	consteval static size_t get_members_count()
 	{
+	    static_assert(n <= static_cast<size_t>(sizeof(T)));
 	    if constexpr (construct_from<n>() && !construct_from<n+1>())
 		return n;
 	    else
@@ -43,7 +44,7 @@ namespace refl
     template<size_t... idx>
     inline static void for_each_mem_impl2(auto && callback, std::index_sequence<idx...> idxs, auto const&... m)
     {
-	(callback(idx, m),...);
+	(callback(idx, m),...); 
     }
 
     inline static constexpr void for_each_mem_impl(auto && callback, auto const&... m)
