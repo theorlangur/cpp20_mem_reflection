@@ -74,9 +74,9 @@ namespace refl
 	    auto const& [__VA_ARGS__] = v; \
 	    return callback(__VA_ARGS__); \
 	} \
-	static constexpr size_t all_fields_size() \
+	static consteval size_t all_fields_size() \
 	{ \
-	    auto const& [__VA_ARGS__] = std::declval<T>(); \
+	    auto const& [__VA_ARGS__] = T{}; \
 	    return types_size_sum(__VA_ARGS__); \
 	} \
     } 
@@ -104,7 +104,7 @@ MEMBERS_IMPL(9, f0, f1, f2, f3, f4, f5, f6, f7, f8);
     }
 
     template<class T>
-    inline constexpr auto get_all_fields_size()
+    inline consteval auto get_all_fields_size()
     {
 	return members<T, refl::info<T>::get_members_count()>::all_fields_size();
     }
@@ -165,6 +165,7 @@ int main(int argc, char *argv[])
     });
     constexpr auto field_size_sum = [](auto... fields){return (sizeof(decltype(fields)) + ...); };
     static_assert(sizeof(A) == refl::get_all_fields_size<A>());
+    static_assert(sizeof(B) == refl::get_all_fields_size<B>());
     //static_assert(sizeof(A) == refl::fetch_all_mem<A>(field_size_sum));
     //static_assert(sizeof(B) == refl::fetch_all_mem<B>(field_size_sum));
     return 0;
