@@ -6,6 +6,7 @@
 #include <system_error>
 #include <complex>
 #include <source_location>
+#include <type_traits>
 
 namespace refl
 {
@@ -22,6 +23,7 @@ namespace refl
 	template<size_t n>
 	consteval static bool construct_from()
 	{
+	    static_assert(std::is_aggregate_v<T>, "Must be aggregatable");
 	    return []<size_t... i>(std::index_sequence<i...>)
 	    {
 		return requires { T{any(i)...,}; };
