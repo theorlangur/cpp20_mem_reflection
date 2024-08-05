@@ -138,6 +138,13 @@ struct C: A
     double x;
 };
 
+struct D
+{
+    char m1;
+    padding_t<7> padding;
+    std::string m2;
+};
+
 constexpr size_t fields_size_sum(auto const&... fields)
 {
     return (sizeof(fields) + ...);
@@ -166,6 +173,7 @@ int main(int argc, char *argv[])
     constexpr auto field_size_sum = [](auto... fields){return (sizeof(decltype(fields)) + ...); };
     static_assert(sizeof(A) == refl::get_all_fields_size<A>());
     static_assert(sizeof(B) == refl::get_all_fields_size<B>());
+    static_assert(sizeof(D) == refl::get_all_fields_size<D>());
     //static_assert(sizeof(A) == refl::fetch_all_mem<A>(field_size_sum));
     //static_assert(sizeof(B) == refl::fetch_all_mem<B>(field_size_sum));
     return 0;
