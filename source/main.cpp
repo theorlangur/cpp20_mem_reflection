@@ -8,6 +8,9 @@
 #include <source_location>
 #include <type_traits>
 
+/*#define REFLECTCPP_C_ARRAYS_OR_INHERITANCE*/
+/*#include "reflect-cpp/rfl.hpp"*/
+
 namespace refl
 {
     struct any
@@ -30,14 +33,46 @@ namespace refl
 	    }(std::make_index_sequence<n>());
 	}
 
+	template<size_t idx, size_t nested_size, size_t rest>
+	consteval static bool construct_nested_array_from()
+	{
+	    return []<size_t... i, size_t... n, size_t... r>(std::index_sequence<i...>, std::index_sequence<n...>, std::index_sequence<r...>)
+	    {
+		return requires { T{any(i)..., {any(n)...}, any(r)...}; };
+	    }(std::make_index_sequence<idx>(), std::make_index_sequence<nested_size>(), std::make_index_sequence<rest>());
+	}
+
+	template<size_t index, size_t sz, size_t rest>
+	consteval static size_t get_nested_array_size()
+	{
+	    if constexpr (construct_nested_array_from<index, sz, rest>() && !construct_nested_array_from<index, sz, rest+1>())
+		return sz;
+	    else
+		return get_nested_array_size<index, sz-1, rest+1>();
+	}
+
 	template<size_t n = 0>
-	consteval static size_t get_members_count()
+	consteval static size_t get_agg_max_count()
 	{
 	    static_assert(n <= static_cast<size_t>(sizeof(T)));
 	    if constexpr (construct_from<n>() && !construct_from<n+1>())
 		return n;
 	    else
-		return get_members_count<n+1>();
+		return get_agg_max_count<n+1>();
+	}
+
+	template<size_t i, size_t max>
+	consteval static size_t get_members_count_with_nested()
+	{
+	    if constexpr (i == max)
+		return 0;
+	    else
+		return 1 + get_members_count_with_nested<i + get_nested_array_size<i, max - i, 0>(), max>();
+	}
+
+	consteval static size_t get_members_count()
+	{
+	    return get_members_count_with_nested<0, get_agg_max_count()>();
 	}
     };
 
@@ -119,19 +154,13 @@ struct A
     float m2;
 };
 
-template<size_t N>
-struct padding_t
-{
-    char padding[N];
-};
-
 struct B
 {
     char m1;
-    padding_t<3> padding1;
+    char padding1[3];
     int m2;
     char m3;
-    padding_t<3> padding2;
+    char padding2[3];
 };
 
 struct C: A
@@ -144,8 +173,17 @@ struct C: A
 struct D
 {
     char m1;
-    padding_t<7> padding;
+    char padding[7];
     std::string m2;
+};
+
+struct E
+{
+    char m1;
+    A a;
+    char m3[2];
+    std::string m2;
+    A b;
 };
 
 constexpr size_t fields_size_sum(auto const&... fields)
@@ -176,7 +214,16 @@ int main(int argc, char *argv[])
     constexpr auto field_size_sum = [](auto... fields){return (sizeof(decltype(fields)) + ...); };
     static_assert(sizeof(A) == refl::get_all_fields_size<A>());
     static_assert(sizeof(B) == refl::get_all_fields_size<B>());
-    static_assert(sizeof(D) == refl::get_all_fields_size<D>());
+    static_assert(refl::info<D>::construct_nested_array_from<0,1,2>());
+    static_assert(refl::info<E>::get_members_count() == 5);
+    /*static_assert(refl::info<E>::construct_nested_array_from<1,3,1>());*/
+    /*static_assert(sizeof(D) == refl::get_all_fields_size<D>());*/
+
+    /*constexpr auto kMaxAgg = rfl::internal::CountFieldsHelper<E>::count_max_args_in_agg();*/
+    /*constexpr auto kArrSize = rfl::internal::CountFieldsHelper<E>::get_nested_array_size<1, 2, 3>();*/
+    /*constexpr auto kConsts = rfl::internal::CountFieldsHelper<E>::constructible_with_nested<1, 2, 3>();*/
+    /*auto fields = rfl::fields<E>();*/
+    /*static_assert(fields.size() == 5);*/
     //static_assert(sizeof(A) == refl::fetch_all_mem<A>(field_size_sum));
     //static_assert(sizeof(B) == refl::fetch_all_mem<B>(field_size_sum));
     return 0;
