@@ -8,9 +8,6 @@
 #include <source_location>
 #include <type_traits>
 
-/*#define REFLECTCPP_C_ARRAYS_OR_INHERITANCE*/
-/*#include "reflect-cpp/rfl.hpp"*/
-
 namespace refl
 {
     struct any
@@ -218,12 +215,6 @@ int main(int argc, char *argv[])
     static_assert(refl::info<E>::get_members_count() == 5);
     /*static_assert(refl::info<E>::construct_nested_array_from<1,3,1>());*/
     /*static_assert(sizeof(D) == refl::get_all_fields_size<D>());*/
-
-    /*constexpr auto kMaxAgg = rfl::internal::CountFieldsHelper<E>::count_max_args_in_agg();*/
-    /*constexpr auto kArrSize = rfl::internal::CountFieldsHelper<E>::get_nested_array_size<1, 2, 3>();*/
-    /*constexpr auto kConsts = rfl::internal::CountFieldsHelper<E>::constructible_with_nested<1, 2, 3>();*/
-    /*auto fields = rfl::fields<E>();*/
-    /*static_assert(fields.size() == 5);*/
     //static_assert(sizeof(A) == refl::fetch_all_mem<A>(field_size_sum));
     //static_assert(sizeof(B) == refl::fetch_all_mem<B>(field_size_sum));
     return 0;
