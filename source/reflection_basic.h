@@ -10,9 +10,9 @@ namespace refl
     struct any
     {
         //decl only
-        constexpr any(size_t i);
+        constexpr any(size_t i) noexcept;
         //decl only
-        template<class T> constexpr operator T();
+        template<class T> constexpr operator T() noexcept;
     };
 
     template<class T>
