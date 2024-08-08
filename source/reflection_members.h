@@ -48,6 +48,17 @@ MEMBERS_IMPL(6, f0, f1, f2, f3, f4, f5);
 MEMBERS_IMPL(7, f0, f1, f2, f3, f4, f5, f6);
 MEMBERS_IMPL(8, f0, f1, f2, f3, f4, f5, f6, f7);
 MEMBERS_IMPL(9, f0, f1, f2, f3, f4, f5, f6, f7, f8);
+MEMBERS_IMPL(10, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9);
+MEMBERS_IMPL(11, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, f10);
+MEMBERS_IMPL(12, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, f10, f11);
+MEMBERS_IMPL(13, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, f10, f11, f12);
+MEMBERS_IMPL(14, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, f10, f11, f12, f13);
+MEMBERS_IMPL(15, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, f10, f11, f12, f13, f14);
+MEMBERS_IMPL(16, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, f10, f11, f12, f13, f14, f15);
+MEMBERS_IMPL(17, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, f10, f11, f12, f13, f14, f15, f16);
+MEMBERS_IMPL(18, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, f10, f11, f12, f13, f14, f15, f16, f17);
+MEMBERS_IMPL(19, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, f10, f11, f12, f13, f14, f15, f16, f17, f18);
+MEMBERS_IMPL(20, f0, f1, f2, f3, f4, f5, f6, f7, f8, f9, f10, f11, f12, f13, f14, f15, f16, f17, f18, f19);
 }
 
 #endif
